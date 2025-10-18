@@ -1,871 +1,358 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KohaClient - Enhance Your Minecraft Experience</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Oxanium:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
-    <style>
-        :root {
-            --bg-dark: #101014;
-            --bg-medium: #18181e;
-            --bg-light: #2c2c36;
-            --accent-blue: #007bff;
-            --accent-blue-hover: #0069d9;
-            --text-light: #e0e0e0;
-            --text-medium: #aaaaaa;
-            --text-dark: #777777;
-            --border-color: rgba(255, 255, 255, 0.08);
-            --font-main: 'Montserrat', sans-serif;
-            --font-display: 'Oxanium', cursive;
-            --padding-section: 120px 5%;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: var(--font-main);
-            background-color: var(--bg-dark);
-            color: var(--text-light);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 15px;
-        }
-
-        .section {
-            padding: var(--padding-section);
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        h1, h2, h3, h4 {
-            font-family: var(--font-display);
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: #fff;
-            margin-bottom: 20px;
-            text-shadow: 0 0 15px rgba(0, 123, 255, 0.3);
-        }
-
-        h1 { font-size: 3.8rem; margin-bottom: 25px; line-height: 1.2; }
-        h2 { font-size: 2.8rem; margin-bottom: 30px; }
-        h3 { font-size: 1.8rem; margin-bottom: 15px; }
-        p { font-size: 1.1rem; color: var(--text-medium); max-width: 800px; margin: 0 auto 20px auto; }
-
-        .btn-primary {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background: linear-gradient(45deg, var(--accent-blue), #0056b3);
-            color: #fff;
-            padding: 15px 35px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-size: 1.1rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 25px rgba(0, 123, 255, 0.4);
-            border: none;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 12px 30px rgba(0, 123, 255, 0.6);
-            background: linear-gradient(45deg, var(--accent-blue-hover), #004085);
-        }
-
-        .btn-secondary {
-            background-color: transparent;
-            color: var(--accent-blue);
-            border: 2px solid var(--accent-blue);
-            padding: 12px 30px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-size: 1rem;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            margin-left: 20px;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-        }
-
-        .btn-secondary:hover {
-            background-color: var(--accent-blue);
-            color: #fff;
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
-        }
-
-        .hero {
-            background: radial-gradient(circle at center, rgba(0, 123, 255, 0.1) 0%, transparent 60%);
-        }
-        .features {
-            background: linear-gradient(to bottom, rgba(0, 123, 255, 0.03), transparent);
-        }
-        .kc-plus {
-            background: linear-gradient(to top, rgba(0, 123, 255, 0.05), transparent);
-        }
-
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            position: relative;
-        }
-
-        .hero h1 span {
-            color: var(--accent-blue);
-            text-shadow: 0 0 20px var(--accent-blue), 0 0 30px var(--accent-blue);
-        }
-
-        .hero p {
-            font-size: 1.25rem;
-            margin-top: 20px;
-            margin-bottom: 40px;
-            color: var(--text-medium);
-            max-width: 900px;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 30px;
-            margin-top: 60px;
-        }
-
-        .feature-card {
-            background: var(--bg-medium);
-            padding: 35px;
-            border-radius: 15px;
-            border: 1px solid var(--border-color);
-            transition: all 0.3s ease-in-out;
-            text-align: left;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-        }
-
-        .feature-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, rgba(0,123,255,0.05), transparent);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            z-index: 0;
-        }
-
-        .feature-card:hover::before {
-            opacity: 1;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            border-color: var(--accent-blue);
-            box-shadow: 0 10px 30px rgba(0, 123, 255, 0.3);
-        }
-
-        .feature-card i {
-            font-size: 3rem;
-            color: var(--accent-blue);
-            margin-bottom: 20px;
-            display: block;
-            position: relative;
-            z-index: 1;
-        }
-
-        .feature-card h3 {
-            font-size: 1.6rem;
-            margin-bottom: 10px;
-            color: #fff;
-            position: relative;
-            z-index: 1;
-        }
-
-        .feature-card p {
-            font-size: 1rem;
-            color: var(--text-medium);
-            margin: 0;
-            position: relative;
-            z-index: 1;
-        }
-
-        .image-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 50px;
-            margin-top: 60px;
-        }
-
-        .image-section img {
-            max-width: 90%;
-            height: auto;
-            border-radius: 15px;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 15px 40px rgba(0, 123, 255, 0.15);
-            transition: all 0.5s ease;
-        }
-
-        .image-section img:hover {
-            transform: scale(1.03);
-            box-shadow: 0 20px 50px rgba(0, 123, 255, 0.25);
-        }
-
-        .image-description {
-            max-width: 600px;
-        }
-
-        .kc-plus-content {
-            display: flex;
-            flex-direction: column;
-            gap: 40px;
-            margin-top: 60px;
-        }
-
-        .kc-plus-card {
-            background: var(--bg-medium);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 40px;
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: space-around;
-            text-align: left;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .kc-plus-card::before {
-            content: '';
-            position: absolute;
-            top: -20%;
-            left: -20%;
-            width: 140%;
-            height: 140%;
-            background: radial-gradient(circle at center, rgba(0, 123, 255, 0.08) 0%, transparent 70%);
-            animation: rotateBackground 20s linear infinite;
-            z-index: 0;
-        }
-        
-        @keyframes rotateBackground {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        .kc-details {
-            flex: 1;
-            min-width: 300px;
-            max-width: 500px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .kc-details h3 {
-            font-size: 2.2rem;
-            color: var(--accent-blue);
-            margin-bottom: 10px;
-        }
-
-        .kc-details .price {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #fff;
-            margin-bottom: 20px;
-        }
-
-        .kc-details .price span {
-            font-size: 1.2rem;
-            color: var(--text-medium);
-        }
-
-        .kc-features {
-            list-style: none;
-            padding-left: 0;
-            margin-top: 20px;
-            flex: 1;
-            min-width: 300px;
-            max-width: 500px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .kc-features li {
-            font-size: 1.1rem;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            color: var(--text-light);
-        }
-
-        .kc-features li i {
-            color: var(--accent-blue);
-            margin-right: 15px;
-            font-size: 1.5rem;
-            min-width: 25px;
-        }
-        
-        .faq-container {
-            max-width: 900px;
-            margin: 60px auto 0;
-            text-align: left;
-        }
-
-        .faq-item {
-            margin-bottom: 15px;
-        }
-
-        .faq-item summary {
-            background-color: var(--bg-medium);
-            padding: 20px 25px;
-            border-radius: 10px;
-            cursor: pointer;
-            list-style: none;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-weight: 600;
-            font-size: 1.15rem;
-            color: #fff;
-            transition: background-color 0.3s ease, color 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .faq-item summary::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, var(--accent-blue), transparent);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            z-index: 0;
-        }
-        .faq-item summary:hover::before { opacity: 0.1; }
-
-        .faq-item summary::after {
-            content: '+';
-            font-size: 1.8rem;
-            font-weight: 300;
-            margin-left: 20px;
-            transition: transform 0.3s ease;
-            position: relative;
-            z-index: 1;
-        }
-
-        .faq-item[open] summary {
-            background-color: var(--accent-blue);
-            color: #fff;
-            border-radius: 10px 10px 0 0;
-        }
-        .faq-item[open] summary::before { opacity: 0.2; }
-
-        .faq-item[open] summary::after {
-            transform: rotate(45deg);
-            color: #fff;
-        }
-
-        .faq-item .faq-content {
-            padding: 20px 25px;
-            background: var(--bg-medium);
-            border-radius: 0 0 10px 10px;
-            margin-top: -5px;
-            color: var(--text-medium);
-            font-size: 1rem;
-        }
-
-        .cta-discord {
-            background: var(--bg-medium);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 60px;
-            margin-top: 80px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .cta-discord::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, rgba(88,101,242,0.1), transparent);
-            opacity: 0.5;
-            transition: opacity 0.5s ease;
-            z-index: 0;
-        }
-        .cta-discord:hover::before {
-            opacity: 0.8;
-        }
-
-
-        .cta-discord i {
-            font-size: 5rem;
-            color: #5865F2;
-            margin-bottom: 20px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .cta-discord h2 {
-            color: #fff;
-            margin-bottom: 15px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .cta-discord p {
-            max-width: 700px;
-            margin-bottom: 30px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .btn-discord {
-            background-color: #5865F2;
-            color: #fff;
-            padding: 15px 35px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-size: 1.1rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 25px rgba(88,101,242,0.4);
-            border: none;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .btn-discord:hover {
-            background-color: #4752C4;
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 12px 30px rgba(88,101,242,0.6);
-        }
-
-        footer {
-            padding: 60px 5% 30px;
-            border-top: 1px solid var(--border-color);
-            text-align: center;
-            background-color: var(--bg-medium);
-            margin-top: 80px;
-        }
-
-        .footer-logo {
-            font-family: var(--font-display);
-            font-size: 2.5rem;
-            color: #fff;
-            margin-bottom: 25px;
-            text-shadow: 0 0 10px rgba(0, 123, 255, 0.2);
-        }
-
-        .footer-logo span {
-            color: var(--accent-blue);
-        }
-
-        .social-links {
-            margin-bottom: 30px;
-        }
-
-        .social-links a {
-            color: var(--text-medium);
-            font-size: 2rem;
-            margin: 0 18px;
-            text-decoration: none;
-            transition: color 0.3s ease, transform 0.3s ease;
-            display: inline-block;
-        }
-
-        .social-links a:hover {
-            color: var(--accent-blue);
-            transform: translateY(-5px) scale(1.1);
-        }
-
-        .footer-nav {
-            margin-bottom: 30px;
-        }
-
-        .footer-nav a {
-            color: var(--text-medium);
-            margin: 0 15px;
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .footer-nav a:hover {
-            color: #fff;
-        }
-
-        .copyright {
-            color: var(--text-dark);
-            font-size: 0.9rem;
-        }
-
-        .reveal {
-            opacity: 0;
-            transform: translateY(50px);
-            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-            will-change: opacity, transform;
-        }
-
-        .reveal.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        .reveal.visible.delay-1 { transition-delay: 0.1s; }
-        .reveal.visible.delay-2 { transition-delay: 0.2s; }
-        .reveal.visible.delay-3 { transition-delay: 0.3s; }
-        .reveal.visible.delay-4 { transition-delay: 0.4s; }
-        .reveal.visible.delay-5 { transition-delay: 0.5s; }
-        .reveal.visible.delay-6 { transition-delay: 0.6s; }
-        .reveal.visible.delay-7 { transition-delay: 0.7s; }
-
-        @keyframes pulseGlow {
-            0% { box-shadow: 0 0 15px rgba(0, 123, 255, 0.4); }
-            50% { box-shadow: 0 0 30px rgba(0, 123, 255, 0.7); }
-            100% { box-shadow: 0 0 15px rgba(0, 123, 255, 0.4); }
-        }
-
-        .hero .btn-primary {
-            animation: pulseGlow 2s infinite ease-in-out;
-        }
-
-
-        @media (max-width: 992px) {
-            h1 { font-size: 3rem; }
-            h2 { font-size: 2.2rem; }
-            h3 { font-size: 1.5rem; }
-            p { font-size: 1rem; }
-            .section { padding: 80px 4%; }
-            .btn-primary, .btn-secondary { padding: 12px 25px; font-size: 1rem; }
-            .kc-plus-card { flex-direction: column; text-align: center; }
-            .kc-features { margin-top: 30px; }
-            .kc-features li { justify-content: center; }
-        }
-
-        @media (max-width: 768px) {
-            h1 { font-size: 2.5rem; }
-            h2 { font-size: 1.8rem; }
-            h3 { font-size: 1.3rem; }
-            .hero p { font-size: 1.1rem; }
-            .btn-secondary { margin-left: 0; margin-top: 15px; }
-            .image-section img { max-width: 100%; }
-            .feature-card { padding: 25px; }
-            .kc-plus-card { padding: 30px; }
-            .kc-details .price { font-size: 2rem; }
-            .faq-item summary { font-size: 1rem; padding: 15px 20px; }
-            .cta-discord { padding: 40px; }
-            .cta-discord i { font-size: 4rem; }
-            .footer-logo { font-size: 2rem; }
-            .social-links a { font-size: 1.5rem; margin: 0 10px; }
-            .footer-nav a { margin: 0 8px; font-size: 0.9rem; }
-        }
-
-        @media (max-width: 576px) {
-            h1 { font-size: 2rem; }
-            h2 { font-size: 1.5rem; }
-            .hero p { font-size: 1rem; }
-            .btn-primary { width: 100%; margin-bottom: 15px; }
-            .btn-secondary { width: 100%; margin-left: 0; }
-            .feature-card { text-align: center; }
-            .feature-card i { margin: 0 auto 20px; }
-            .kc-features li { font-size: 0.95rem; }
-        }
-
-        .particle-container {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            z-index: 0;
-            overflow: hidden;
-            pointer-events: none;
-        }
-
-        .particle {
-            position: absolute;
-            background-color: var(--accent-blue);
-            border-radius: 50%;
-            opacity: 0;
-            animation: floatAndFade 20s infinite ease-out;
-        }
-
-        @keyframes floatAndFade {
-            0% {
-                transform: translateY(100vh) translateX(var(--x-start, 0px)) scale(var(--s, 0.5));
-                opacity: 0;
-            }
-            10% { opacity: var(--o, 0.2); }
-            90% { opacity: var(--o, 0.2); }
-            100% {
-                transform: translateY(-100vh) translateX(var(--x-end, 0px)) scale(var(--s, 0.5));
-                opacity: 0;
-            }
-        }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>KohaClient – Next-Gen Minecraft Client</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Oxanium:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+  <style>
+    :root{
+      --bg-900:#0b0e12;
+      --text-100:#f5f7ff; --text-300:#c9d4e1; --text-500:#8ea0b5;
+      --accent:#0ea5ff; --accent-2:#3b82f6;
+      --glowA: 0 0 24px rgba(14,165,255,.45), 0 0 64px rgba(14,165,255,.25);
+      --radius-xl:22px; --radius-lg:18px; --radius-md:14px;
+      --shadow-1:0 10px 30px rgba(0,0,0,.35); --shadow-2:0 20px 50px rgba(0,0,0,.5);
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{
+      font-family:'Montserrat',system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,'Helvetica Neue',sans-serif;
+      background:
+        radial-gradient(1200px 600px at 20% -10%, rgba(14,165,255,.12), transparent 60%),
+        radial-gradient(900px 500px at 110% 10%, rgba(59,130,246,.10), transparent 55%),
+        linear-gradient(180deg, var(--bg-900), var(--bg-900));
+      color:var(--text-100);
+      overflow-x:hidden;
+    }
+    .container{max-width:1200px;margin:0 auto;padding:0 20px}
+    section{position:relative;padding:120px 0}
+    @media (max-width:900px){section{padding:80px 0}}
+
+    .cursor-glow{position:fixed;inset:0;pointer-events:none;z-index:0;}
+    .cursor-glow::before{
+      content:"";position:absolute;width:400px;height:400px;border-radius:50%;
+      transform:translate(calc(var(--mx,50%) - 50%), calc(var(--my,50%) - 50%));
+      filter:blur(80px);opacity:.18;mix-blend-mode:screen;left:0;top:0;
+      background:radial-gradient(circle, rgba(14,165,255,.9) 0%, rgba(14,165,255,.35) 35%, transparent 70%);
+      transition: transform .08s linear;
+    }
+
+    #stars{position:fixed;inset:0;z-index:-2;background:transparent;will-change:transform}
+
+    .nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(10px);background:linear-gradient(180deg,rgba(10,14,18,.85),rgba(10,14,18,.35));border-bottom:1px solid rgba(255,255,255,.06)}
+    .nav .row{display:flex;align-items:center;justify-content:space-between;padding:16px 0}
+    .brand{font-family:'Oxanium',monospace;letter-spacing:.8px;font-weight:800;font-size:1.3rem;display:flex;align-items:center;gap:10px}
+    .brand .logo-dot{width:12px;height:12px;border-radius:50%;background:var(--accent);box-shadow:var(--glowA)}
+    .brand span{color:#fff}.brand b{color:var(--accent);text-shadow:0 0 16px rgba(14,165,255,.6)}
+    .nav a{color:var(--text-300);text-decoration:none;margin-left:22px;font-weight:600;letter-spacing:.3px}
+    .nav a:hover{color:#fff}
+
+    .hero{padding-top:140px;padding-bottom:120px}
+    .hero .wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:8px}
+    .badge{display:inline-flex;align-items:center;gap:10px;padding:10px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.08);background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));box-shadow:var(--shadow-1)}
+    .badge i{color:var(--accent)}
+    h1{font-family:'Oxanium',monospace;font-size:clamp(2.2rem,4.5vw,4.2rem);line-height:1.03;margin:18px 0 14px;text-transform:uppercase;letter-spacing:1.6px}
+    .glitch{position:relative;display:inline-block;color:#fff;text-shadow:0 0 22px rgba(14,165,255,.45)}
+    .glitch::before,.glitch::after{content:attr(data-text);position:absolute;inset:0}
+    .glitch::before{color:rgba(14,165,255,1);transform:translate(2px,0);mix-blend-mode:screen;opacity:.6;animation:glitch1 3s infinite linear}
+    .glitch::after{color:rgba(59,130,246,1);transform:translate(-2px,0);mix-blend-mode:screen;opacity:.6;animation:glitch2 2.4s infinite linear}
+    @keyframes glitch1{0%,100%{clip-path:inset(0 0 0 0)}20%{clip-path:inset(10% 0 55% 0)}40%{clip-path:inset(80% 0 2% 0)}60%{clip-path:inset(30% 0 20% 0)}80%{clip-path:inset(5% 0 70% 0)}}
+    @keyframes glitch2{0%,100%{clip-path:inset(0 0 0 0)}25%{clip-path:inset(60% 0 8% 0)}50%{clip-path:inset(15% 0 30% 0)}75%{clip-path:inset(2% 0 85% 0)}}
+    p.lead{color:var(--text-300);font-size:1.12rem;max-width:640px;margin:0 auto}
+
+    .cta{display:flex;flex-wrap:wrap;gap:14px;margin-top:24px;justify-content:center}
+    .btn{position:relative;display:inline-flex;align-items:center;gap:10px;padding:14px 22px;border-radius:16px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;border:1px solid rgba(255,255,255,.08);background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));color:#fff;text-decoration:none;transform:translateZ(0)}
+    .btn::after{content:"";position:absolute;inset:-2px;border-radius:inherit;padding:2px;background:linear-gradient(120deg,rgba(14,165,255,.0),rgba(14,165,255,.6),rgba(14,165,255,.0));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:.85}
+    .btn.primary{box-shadow:var(--glowA)}
+    .btn:hover{transform:translateY(-2px)}
+    .btn .shine{position:absolute;inset:-1px;border-radius:inherit;background:radial-gradient(120px 120px at var(--mx,50%) var(--my,50%), rgba(255,255,255,.25), transparent 70%);opacity:.25;mix-blend-mode:screen;transition:opacity .25s}
+    .btn:hover .shine{opacity:.55}
+
+    .mock{position:relative;height:520px;border-radius:var(--radius-xl);background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.06);box-shadow:var(--shadow-2),var(--glowA);overflow:hidden;transform-style:preserve-3d}
+    .mock img{width:100%;height:100%;object-fit:cover;opacity:.96;will-change:transform}
+    .grid-aurora{position:absolute;inset:-30%;background:radial-gradient(800px 300px at 20% 10%, rgba(14,165,255,.25), transparent 60%),conic-gradient(from 0deg, rgba(14,165,255,.12), rgba(59,130,246,.06), rgba(14,165,255,.12));filter:blur(40px);opacity:.35}
+    .wire{position:absolute;inset:-2px;background-image:linear-gradient(transparent 95%, rgba(255,255,255,.08) 96%),linear-gradient(90deg, transparent 95%, rgba(255,255,255,.08) 96%);background-size:100% 24px, 24px 100%;opacity:.08}
+
+    .section-title{text-align:center;margin-bottom:16px;font-family:'Oxanium';letter-spacing:1.4px;text-transform:uppercase}
+    .section-sub{color:var(--text-500);text-align:center;max-width:780px;margin:0 auto 40px}
+
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+    @media (max-width:980px){.grid{grid-template-columns:1fr 1fr}}
+    @media (max-width:640px){.grid{grid-template-columns:1fr}}
+    .card{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.08);border-radius:var(--radius-lg);padding:26px;overflow:hidden;box-shadow:var(--shadow-1);transform-style:preserve-3d;transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease}
+    .card:hover{box-shadow:0 20px 60px rgba(14,165,255,.18);border-color:rgba(14,165,255,.55)}
+    .icon{font-size:2rem;color:var(--accent);margin-bottom:12px;filter:drop-shadow(0 6px 22px rgba(14,165,255,.35))}
+    .card h3{font-family:'Oxanium';font-size:1.2rem;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px}
+    .card p{color:var(--text-300);font-size:.98rem}
+    .glow-ring{position:absolute;inset:-1px;border-radius:inherit;pointer-events:none;background:radial-gradient(500px 220px at var(--px,50%) var(--py,50%), rgba(14,165,255,.35), transparent 60%);opacity:.15;mix-blend-mode:screen}
+
+    .parallax{position:relative;height:520px;border-radius:var(--radius-xl);overflow:hidden;border:1px solid rgba(255,255,255,.08);background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));box-shadow:var(--shadow-2)}
+    .parallax img{position:absolute; inset:0;width:100%; height:100%;object-fit: cover;object-position: center center;transform: translate3d(var(--x,0),var(--y,0),0);transition: transform .2s;}
+    .parallax .overlay{position:absolute;inset:0;background:radial-gradient(800px 320px at 20% 20%, rgba(14,165,255,.24), transparent 60%);mix-blend-mode:screen;pointer-events:none}
+
+    .price-card{display:grid;grid-template-columns:1.1fr 1fr;gap:30px;align-items:center;background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.08);border-radius:var(--radius-xl);padding:36px;box-shadow:var(--shadow-2);overflow:hidden}
+    @media (max-width:900px){.price-card{grid-template-columns:1fr}}
+    .price h3{font-family:'Oxanium';font-size:2rem;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:10px}
+    .value{font-size:3rem;font-weight:800;line-height:1}
+    .value small{font-size:1rem;color:var(--text-500)}
+    .benefits{list-style:none;margin:18px 0 0;display:grid;gap:10px}
+    .benefits li{display:flex;align-items:center;gap:10px;color:#fff}
+    .benefits i{color:var(--accent)}
+
+    .faq details{background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.08);border-radius:14px;margin:12px 0;overflow:hidden}
+    .faq summary{cursor:pointer;list-style:none;padding:18px 20px;font-weight:700;display:flex;align-items:center;justify-content:space-between}
+    .faq summary::after{content:"+";transition:transform .2s ease}
+    .faq details[open] summary::after{transform:rotate(45deg)}
+    .faq .content{padding:0 20px 18px 20px;color:var(--text-300)}
+
+    .cta-discord{background:linear-gradient(180deg,rgba(14,165,255,.05),rgba(14,165,255,.02));border:1px solid rgba(255,255,255,.08);border-radius:var(--radius-xl);padding:44px;text-align:center;overflow:hidden;box-shadow:var(--shadow-2)}
+    .cta-discord .ring{position:absolute;inset:-1px;border-radius:inherit;background:conic-gradient(from var(--deg,0deg), rgba(14,165,255,.0), rgba(14,165,255,.65), rgba(14,165,255,.0));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;padding:1px;animation:spin 6s linear infinite}
+    @keyframes spin{to{--deg:360deg}}
+
+    footer{border-top:1px solid rgba(255,255,255,.08);padding:50px 0}
+    .footer-brand{font-family:'Oxanium';font-weight:800;font-size:2rem;letter-spacing:1px}
+    .footer-brand b{color:var(--accent)}
+    .social{margin-top:18px}
+    .social a{color:var(--text-500);font-size:1.6rem;margin:0 10px;text-decoration:none}
+    .social a:hover{color:#fff}
+
+    .reveal{opacity:0;transform:translateY(20px) scale(.98);filter:blur(6px)}
+    .reveal.show{opacity:1;transform:none;filter:none;transition:opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1), filter .7s}
+  </style>
 </head>
 <body>
+  <canvas id="stars" aria-hidden="true"></canvas>
+  <div class="cursor-glow" aria-hidden="true"></div>
 
-    <div class="particle-container"></div>
+  <header class="nav">
+    <div class="container row">
+      <div class="brand"><span class="logo-dot"></span><span>Koha</span><b>Client</b></div>
+      <nav>
+        <a href="#features">Features</a>
+        <a href="#launcher">Launcher</a>
+        <a href="#cosmetics">Cosmetics</a>
+        <a href="#kcplus">KC+</a>
+        <a href="#faq">FAQ</a>
+        <a href="#discord">Discord</a>
+      </nav>
+    </div>
+  </header>
 
-    <section class="hero section">
-        <div class="container">
-            <h1 class="reveal">Koha<span>Client</span></h1>
-            <p class="reveal delay-1">Enhance your Minecraft experience with unparalleled performance, exclusive cosmetics, and cutting-edge features.</p>
-            <div class="reveal delay-2">
-                <a href="#" class="btn-primary"><i class='bx bxl-windows'></i> Coming soon...</a>
-            </div>
+  <section class="hero">
+    <div class="container wrap">
+      <div>
+        <div class="badge reveal"><i class='bx bxs-bolt'></i> Next-Gen Performance • Dark Mode • Made with love ❤️</div>
+        <h1 class="reveal"><span class="glitch" data-text="KohaClient">KohaClient</span><br/>Enhance Your Minecraft</h1>
+        <p class="lead reveal">Ultra-smooth FPS, exclusive cosmetics, social features and a custom launcher — all wrapped in a sleek dark theme.</p>
+        <div class="cta reveal">
+          <a class="btn primary" href="#" aria-disabled="true"><i class='bx bxl-windows'></i> Coming soon…<span class="shine"></span></a>
+          <a class="btn" href="#features"><i class='bx bxs-rocket'></i> Explore<span class="shine"></span></a>
         </div>
-    </section>
+      </div>
+    </div>
+  </section>
 
-    <section class="features section">
-        <div class="container">
-            <h2 class="reveal">Key Features</h2>
-            <p class="reveal delay-1">Discover what makes KohaClient the ultimate choice for every Minecraft player.</p>
+  <section id="features" style="margin-top: 12rem;">
+    <div class="container">
+      <h2 class="section-title reveal">Key Features</h2>
+      <p class="section-sub reveal">Why KohaClient? Because style and performance aren’t mutually exclusive.</p>
+      <div class="grid">
+        <article class="card reveal" data-speed="0.02">
+          <i class='bx bxs-group icon'></i>
+          <h3>Friends & Chat</h3>
+          <p>Stay connected — seamless in-game chat, invites, and social features built right in.</p>
+          <div class="glow-ring"></div>
+        </article>
+        <article class="card reveal" data-speed="0.03">
+          <i class='bx bxs-paint icon'></i>
+          <h3>Custom Cosmetics</h3>
+          <p>Express yourself with hats, cloaks, skins, and animated effects — all yours to customize.</p>
+          <div class="glow-ring"></div>
+        </article>
+        <article class="card reveal" data-speed="0.01">
+          <i class='bx bxs-t-shirt icon'></i>
+          <h3>Free Emotes & Capes</h3>
+          <p>Start for free — no hidden costs, just pure style and creativity.</p>
+          <div class="glow-ring"></div>
+        </article>
+        <article class="card reveal" data-speed="0.02">
+          <i class='bx bxs-rocket icon'></i>
+          <h3>Custom Launcher</h3>
+          <p>Optimized for performance, easy mod management, and a smooth, modern experience.</p>
+          <div class="glow-ring"></div>
+        </article>
+        <article class="card reveal" data-speed="0.03">
+          <i class='bx bx-desktop icon'></i>
+          <h3>Advanced HUD</h3>
+          <p>Monitor FPS, coordinates, ping and more — fully customizable and positionable.</p>
+          <div class="glow-ring"></div>
+        </article>
+        <article class="card reveal" data-speed="0.01">
+          <i class='bx bx-microphone icon'></i>
+          <h3>Dynamic Voice Chat</h3>
+          <p>Experience fully integrated 3D spatial audio — works on every server, even your own, no extra plugins or mods required.</p>
+          <div class="glow-ring"></div>
+        </article>
+      </div>
+    </div>
+  </section>
 
-            <div class="features-grid">
-                <div class="feature-card reveal delay-2">
-                    <i class='bx bxs-group'></i>
-                    <h3>Friends (Chat & More)</h3>
-                    <p>Stay connected with your friends, chat in-game, invite them to your worlds, and share custom emotes for a truly social Minecraft experience.</p>
-                </div>
-                <div class="feature-card reveal delay-3">
-                    <i class='bx bxs-paint'></i>
-                    <h3>Custom Cosmetics</h3>
-                    <p>Personalize your character with a wide range of unique hats, cloaks, and other cosmetic items to stand out from the crowd.</p>
-                </div>
-                <div class="feature-card reveal delay-4">
-                    <i class='bx bxs-t-shirt'  ></i> 
-                    <h3>Free Emotes & Capes</h3>
-                    <p>Express yourself with a selection of free emotes and capes available to all KohaClient users. No hidden fees, just fun!</p>
-                </div>
-                <div class="feature-card reveal delay-5">
-                    <i class='bx bxs-rocket'></i>
-                    <h3>Custom Launcher</h3>
-                    <p>Our custom-built launcher ensures maximum performance, easy mod management, and a seamless, user-friendly interface for an optimized game start.</p>
-                </div>
-                <div class="feature-card reveal delay-6">
-                    <i class='bx bx-desktop'></i>
-                    <h3>Advanced HUD System</h3>
-                    <p>Customize your heads-up display with essential information like FPS, coordinates, ping, and more to keep track of your game stats in real-time.</p>
-                </div>
-                <div class="feature-card reveal delay-7">
-                    <i class='bx bx-zoom-in'></i>
-                    <h3>Dynamic Zoom</h3>
-                    <p>Gain a tactical advantage with our integrated zoom feature, allowing you to get a closer look at distant objects or opponents.</p>
-                </div>
-            </div>
+  <section id="launcher">
+    <div class="container">
+      <h2 class="section-title reveal">Our Custom Launcher</h2>
+      <p class="section-sub reveal">Rethought from scratch. Strong animations. Ready for your flow.</p>
+      <div class="parallax-wrap reveal">
+        <div class="parallax" data-parallax data-speed="0.05">
+          <img src="launcher.png" alt="Launcher Screenshot" />
+          <div class="overlay"></div>
         </div>
-    </section>
+      </div>
+    </div>
+  </section>
 
-    <section class="section">
-        <div class="container">
-            <h2 class="reveal">Our Custom Launcher</h2>
-            <p class="reveal delay-1">Experience Minecraft like never before with our completely redesigned launcher. Powerful features in a beautiful, user-friendly interface.</p>
-            <div class="image-section reveal delay-2">
-                <img src="launcher.png" alt="KohaClient Launcher" draggable="false">
-            </div>
+  <section id="cosmetics">
+    <div class="container">
+      <h2 class="section-title reveal">Custom Cosmetics</h2>
+      <p class="section-sub reveal">Unique items with 3D glow, animation layers & premium finish.</p>
+      <div class="parallax-wrap reveal">
+        <div class="parallax" data-parallax data-speed="0.04">
+          <img src="cosmetics.png" alt="Cosmetics Screenshot" />
+          <div class="overlay"></div>
         </div>
-    </section>
+      </div>
+    </div>
+  </section>
 
-    <section class="section">
-        <div class="container">
-            <h2 class="reveal">Custom Cosmetics</h2>
-            <p class="reveal delay-1">Explore our unique collection of cosmetics and personalize your character to match your style.</p>
-            <div class="image-section reveal delay-2">
-                <img src="cosmetics.png" alt="KohaClient Cosmetics" draggable="false">
-            </div>
+  <section id="kcplus">
+    <div class="container">
+      <h2 class="section-title reveal">KohaClient<span style="color:var(--accent)">+</span> Premium</h2>
+      <p class="section-sub reveal">Level up with exclusive goodies and direct support for the project.</p>
+      <div class="price-card reveal" data-speed="0.02">
+        <div class="price">
+          <h3>KC+ Subscription</h3>
+          <div class="value">9.99€ <small>/ monthly</small></div>
+          <a class="btn primary" style="margin-top: 20px; transition: all 0.2s ease;" href="#"><i class='bx bxs-cart'></i> Subscribe Now<span class="shine"></span></a>
         </div>
-    </section>
+        <ul class="benefits">
+          <li><i class='bx bxs-badge-check'></i> 500 coins monthly</li>
+          <li><i class='bx bxs-face'></i> Exclusive AFK emote</li>
+          <li><i class='bx bxl-discord-alt'></i> Private Discord channels</li>
+          <li><i class='bx bxs-star'></i> Premium badge in nametag</li>
+          <li><i class='bx bxs-discount'></i> 10% shop discount</li>
+          <li><i class='bx bxs-heart'></i> Directly support the project</li>
+        </ul>
+      </div>
+    </div>
+  </section>
 
-    <section class="kc-plus section">
-        <div class="container">
-            <h2 class="reveal">KohaClient<span>+</span> Premium</h2>
-            <p class="reveal delay-1">Unlock exclusive benefits and take your Minecraft experience to the next level with KC+.</p>
+  <section id="faq" class="faq">
+    <div class="container">
+      <h2 class="section-title reveal">FAQ</h2>
+      <p class="section-sub reveal">The essentials — short and clear.</p>
+      <details class="reveal" data-speed="0.01">
+        <summary>What is KohaClient?</summary>
+        <div class="content">A modified Minecraft client for better performance, new features and maximum style.</div>
+      </details>
+      <details class="reveal" data-speed="0.01">
+        <summary>Is KohaClient free?</summary>
+        <div class="content">Yes. The base is free. KC+ is optional and brings exclusive extras.</div>
+      </details>
+      <details class="reveal" data-speed="0.01">
+        <summary>How do I use KohaClient?</summary>
+        <div class="content">Download the launcher, install, sign in with your MC account — done.</div>
+      </details>
+      <details class="reveal" data-speed="0.01">
+        <summary>Mod compatibility?</summary>
+        <div class="content">We use Fabric. Many mods work out of the box. Details & lists are on Discord.</div>
+      </details>
+      <details class="reveal" data-speed="0.01">
+        <summary>Launcher won't start?</summary>
+        <div class="content">Update Java & GPU drivers. If issues persist, get support on Discord.</div>
+      </details>
+      <details class="reveal" data-speed="0.01">
+        <summary>Which versions are supported?</summary>
+        <div class="content">Currently Fabric 1.21.8 – 1.21.9. We are continuously expanding.</div>
+      </details>
+    </div>
+  </section>
 
-            <div class="kc-plus-content">
-                <div class="kc-plus-card reveal delay-2">
-                    <div class="kc-details">
-                        <h3>KC+ Subscription</h3>
-                        <p class="price">9.99€ <span>/ monthly</span></p>
-                        <a href="#" class="btn-primary">Subscribe Now</a>
-                    </div>
-                    <ul class="kc-features">
-                        <li><i class='bx bxs-badge-check'></i> 500 Coins Monthly</li>
-                        <li><i class='bx bxs-face'></i> Exclusive AFK Emote</li>
-                        <li><i class='bx bxl-discord-alt'></i> Exclusive Discord Channels Access</li>
-                        <li><i class='bx bxs-star'></i> Premium Status Logo in Nametag</li>
-                        <li><i class='bx bxs-discount'></i> 10% Discount on Shop Items</li>
-                        <li><i class='bx bxs-heart'></i> Directly Support the Project</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
+  <section id="discord">
+    <div class="container">
+      <div class="cta-discord reveal" data-speed="0.02">
+        <div class="ring" aria-hidden="true"></div>
+        <i class='bx bxl-discord-alt' style="font-size:4rem;color:#5865F2"></i>
+        <h2 class="section-title" style="margin-top:10px">Join our Discord</h2>
+        <p class="section-sub">News, giveaways, updates & direct contact with the team.</p>
+        <a class="btn primary" style="transition: all 0.2s ease;" href="https://discord.kohaclient.cc/" target="_blank" rel="noopener"><i class='bx bxl-discord'></i> Join Server<span class="shine"></span></a>
+      </div>
+    </div>
+  </section>
 
-    <section class="section">
-        <div class="container">
-            <h2 class="reveal">Frequently Asked Questions</h2>
-            <p class="reveal delay-1">Find answers to common questions about KohaClient.</p>
+  <footer>
+    <div class="container" style="text-align:center">
+      <div class="footer-brand">Koha<b>Client</b></div>
+      <div class="social">
+        <a style="transition: all 0.2s ease;" href="https://discord.kohaclient.cc/" aria-label="Discord"><i class='bx bxl-discord-alt'></i></a>
+      </div>
+      <p style="margin-top:10px;color:var(--text-500)">© 2025 KohaClient • Not affiliated with Mojang Studios.</p>
+    </div>
+  </footer>
 
-            <div class="faq-container">
-                <details class="faq-item reveal delay-2">
-                    <summary>What is KohaClient?</summary>
-                    <div class="faq-content">
-                        <p>KohaClient is a modified Minecraft client designed to enhance performance, add new features, and personalize your overall gaming experience.</p>
-                    </div>
-                </details>
-                <details class="faq-item reveal delay-3">
-                    <summary>Is KohaClient free?</summary>
-                    <div class="faq-content">
-                        <p>Yes, the base version of KohaClient is completely free. We also offer an optional premium subscription (KC+) that unlocks additional exclusive cosmetics and features.</p>
-                    </div>
-                </details>
-                <details class="faq-item reveal delay-4">
-                    <summary>How do I use KohaClient?</summary>
-                    <div class="faq-content">
-                        <p>Simply download the launcher from our website, install it, and log in with your Minecraft account. The launcher will handle the rest, getting you into the game quickly.</p>
-                    </div>
-                </details>
-                <details class="faq-item reveal delay-5">
-                    <summary>Can I use my existing Minecraft mods?</summary>
-                    <div class="faq-content">
-                        <p>Our launcher is built for compatibility, which is why we use Fabric as its foundation. While many popular mods work seamlessly, some may require specific configurations or might not be fully supported. We recommend checking our Discord for compatibility lists.</p>
-                    </div>
-                </details>
-                <details class="faq-item reveal delay-6">
-                    <summary>What if the launcher doesn't start?</summary>
-                    <div class="faq-content">
-                        <p>Ensure you have the latest version of Java installed and your graphics drivers are up to date. If the issue persists, please contact our support team on Discord for assistance.</p>
-                    </div>
-                </details>
-                <details class="faq-item reveal delay-7">
-                    <summary>Which versions does KohaClient support?</summary>
-                    <div class="faq-content">
-                        <p>At the moment, KohaClient supports all Minecraft Fabric versions from 1.21.8 to 1.21.9. We are continuously working to expand compatibility and make the client accessible to all types of users.</p>
-                    </div>
-                </details>
-            </div>
-        </div>
-    </section>
+  <script>
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('show'); io.unobserve(e.target) } })
+    }, {threshold:.18, rootMargin:'0px 0px -60px 0px'});
+    document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 
-    <section class="section">
-        <div class="container">
-            <div class="cta-discord reveal">
-                <i class='bx bxl-discord-alt'></i>
-                <h2>Join Our Discord Community</h2>
-                <p>Connect with other players, get the latest updates, participate in giveaways, and receive direct support from our team.</p>
-                <a href="https://discord.kohaclient.cc/" class="btn-discord">Join the Server</a>
-            </div>
-        </div>
-    </section>
+    const glow = document.querySelector('.cursor-glow');
+    window.addEventListener('mousemove', (e)=>{
+      glow.style.setProperty('--mx', e.clientX + 'px');
+      glow.style.setProperty('--my', (e.clientY) + 'px');
+    });
 
-    <footer>
-        <div class="container">
-            <div class="footer-logo">Koha<span>Client</span></div>
-            <div class="footer-nav">
-                <a href="terms.html">Terms of Service</a> |
-                <a href="privacy.html">Privacy Policy</a> |
-                <a href="https://discord.kohaclient.cc/">Discord</a>
-            </div>
-            <div style="margin-top:18px;color:var(--text-medium);font-size:0.95rem;">
-                <p>&copy; 2025 KohaClient. All Rights Reserved.</p>
-                <p>Not affiliated with Mojang Studios.</p>
-            </div>
-        </div>
-    </footer>
+    document.querySelectorAll('.btn').forEach(btn=>{
+      btn.addEventListener('mousemove',(e)=>{
+        const r=btn.getBoundingClientRect();
+        const x=e.clientX-r.left, y=e.clientY-r.top;
+        btn.style.setProperty('--mx', x+'px');
+        btn.style.setProperty('--my', y+'px');
+      });
+    });
 
-    <script>
-        // --- Scroll Reveal Animation ---
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    observer.unobserve(entry.target); // Stop observing once visible
-                }
-            });
-        }, {
-            threshold: 0.1, // Element is considered visible when 10% is in viewport
-            rootMargin: '0px 0px -50px 0px' // Start animation slightly before it hits the bottom edge
-        });
+    document.querySelectorAll('[data-parallax]').forEach(block=>{
+      const img = block.querySelector('img');
+      block.addEventListener('mousemove', (e)=>{
+        const r=block.getBoundingClientRect();
+        const x=(e.clientX-(r.left+r.width/2))/r.width;
+        const y=(e.clientY-(r.top+r.height/2))/r.height;
+        img.style.setProperty('--x',(x*-24)+'px');
+        img.style.setProperty('--y',(y*-24)+'px');
+        img.style.transform=`translate3d(var(--x),var(--y),0) scale(1.1)`;
+      });
+    });
 
-        document.querySelectorAll('.reveal').forEach((el) => {
-            observer.observe(el);
-        });
+    const canvas=document.getElementById('stars');
+    const ctx=canvas.getContext('2d');
+    let w,h,stars=[]; const DPR=Math.min(window.devicePixelRatio||1,2);
+    function resize(){ w=canvas.width=innerWidth*DPR; h=canvas.height=innerHeight*DPR; canvas.style.width=innerWidth+'px'; canvas.style.height=innerHeight+'px'; generate(); render(); }
+    function generate(){ const count=Math.round((innerWidth*innerHeight)/14000); stars=Array.from({length:count},()=>({x:Math.random()*w,y:Math.random()*h,s:Math.random()*1.1+.2})); }
+    function render(){ ctx.clearRect(0,0,w,h); ctx.fillStyle='#0ea5ff'; for(const st of stars){ ctx.globalAlpha=0.35 + st.s*0.3; ctx.fillRect(st.x,st.y,st.s*DPR,st.s*DPR);} }
+    resize(); addEventListener('resize', resize);
 
-        // --- Particle Background ---
-        const particleContainer = document.querySelector('.particle-container');
-        const numberOfParticles = 30; // More particles for a denser effect
+    const speedEls = document.querySelectorAll('[data-speed]:not(.card)');
+    const onScroll=()=>{
+      const y=window.scrollY||window.pageYOffset;
+      canvas.style.transform=`translateY(-${y*0.15}px)`;
+      speedEls.forEach(el=>{ const s=parseFloat(el.dataset.speed||'0.05'); el.style.transform=`translate3d(0, ${y*s}px, 0)`; });
+    };
+    document.addEventListener('scroll', onScroll, {passive:true});
 
-        for (let i = 0; i < numberOfParticles; i++) {
-            const particle = document.createElement('div');
-            particle.classList.add('particle');
-            
-            // Randomize size, position, speed, and opacity
-            const size = Math.random() * 4 + 2; // 2px to 6px
-            const duration = Math.random() * 15 + 15; // 15s to 30s
-            const delay = Math.random() * 10; // 0s to 10s delay
-            const xStart = Math.random() * 100 - 50; // -50% to 50% horizontal drift
-            const xEnd = Math.random() * 100 - 50;
-            const opacity = Math.random() * 0.4 + 0.1; // 0.1 to 0.5 opacity
-
-            particle.style.width = `${size}px`;
-            particle.style.height = `${size}px`;
-            particle.style.left = `${Math.random() * 100}%`;
-            particle.style.animationDuration = `${duration}s`;
-            particle.style.animationDelay = `${delay}s`;
-            particle.style.setProperty('--x-start', `${xStart}px`);
-            particle.style.setProperty('--x-end', `${xEnd}px`);
-            particle.style.setProperty('--s', `${size / 5}`); // Scale factor for animation
-            particle.style.setProperty('--o', `${opacity}`); // Opacity for animation
-
-            particleContainer.appendChild(particle);
-        }
-
-    </script>
-
+    if(matchMedia('(prefers-reduced-motion: reduce)').matches){
+      document.removeEventListener('scroll', onScroll);
+      canvas.style.transform='none';
+    }
+  </script>
 </body>
 </html>

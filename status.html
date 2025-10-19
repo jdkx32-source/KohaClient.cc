@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Koha Service Status</title>
+<meta name="color-scheme" content="dark">
+<style>
+  :root{
+    --bg:#0b1220;
+    --bg-elev:#0f1729;
+    --panel:rgba(255,255,255,.06);
+    --glass:rgba(20,30,55,.55);
+    --txt:#ecf2ff;
+    --muted:#9fb3d9;
+    --accent:#3b82f6;
+    --accent-2:#60a5fa;
+    --good:#22c55e;
+    --warn:#f59e0b;
+    --bad:#ef4444;
+    --radius:18px;
+    --shadow:0 10px 30px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.04);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; color:var(--txt);
+    background:var(--bg);
+    font:16px/1.45 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Inter,Helvetica,Arial;
+    -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+    overflow-x:hidden;
+  }
+  .bg{position:fixed; inset:0; pointer-events:none; z-index:-1;
+    background:
+      radial-gradient(1000px 520px at 75% -10%, rgba(59,130,246,.2), transparent 60%),
+      radial-gradient(800px 480px at -10% 20%, rgba(59,130,246,.14), transparent 60%),
+      linear-gradient(180deg, #0b1220 0%, #0a1020 100%);
+  }
+  .waves::before,.waves::after{content:""; position:absolute; inset:-30%;
+    background:radial-gradient(circle at center, rgba(59,130,246,.12) 0 30%, transparent 35% 100%);
+    filter:blur(55px); animation:ping 12s linear infinite;}
+  .waves::after{ animation-duration:18s; opacity:.6 }
+  @keyframes ping{0%{transform:scale(.7);opacity:.7}70%{transform:scale(1.5);opacity:.15}100%{transform:scale(2);opacity:0}}
+  .wrap{ max-width:1120px; margin:0 auto; padding:32px 18px 90px }
+  header{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:22px }
+  .brand{ display:flex; align-items:center; gap:12px; }
+  .logo{ width:36px;height:36px;border-radius:12px;background:linear-gradient(145deg,var(--accent),var(--accent-2));
+    display:grid;place-items:center;color:white;font-weight:800;box-shadow:0 10px 25px rgba(59,130,246,.45), inset 0 0 8px rgba(255,255,255,.25);}
+  .brand h1{ font-size:18px; margin:0 }
+  .subtle{ color:var(--muted); font-size:12px; margin-top:2px }
+  .status-banner{ position:relative; overflow:hidden; background:linear-gradient(180deg, rgba(20,30,55,.75), rgba(20,30,55,.55));
+    border:1px solid rgba(96,165,250,.25); border-radius:var(--radius); padding:20px; box-shadow:var(--shadow); margin-bottom:14px;}
+  .status-banner .row{ display:flex; align-items:center; gap:12px; flex-wrap:wrap }
+  .pulse{ width:14px;height:14px;border-radius:999px;flex:0 0 auto;
+    background:radial-gradient(circle at 50% 50%, #4ade80 35%, #22c55e 60%, #1a9c49 80%);
+    box-shadow:0 0 0 0 rgba(34,197,94,.6); animation:statusPulse 2.2s infinite;}
+  @keyframes statusPulse{0%{box-shadow:0 0 0 0 rgba(34,197,94,.55)}70%{box-shadow:0 0 0 16px rgba(34,197,94,0)}100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}}
+  .banner-title{ font-weight:700; letter-spacing:.2px }
+  .banner-sub{ color:var(--muted); font-size:13px; margin-top:6px }
+  .grid{ margin-top:10px; display:grid; gap:16px; grid-template-columns:repeat(12,1fr) }
+  .col-4{ grid-column:span 12 }
+  @media (min-width:860px){ .col-4{ grid-column:span 4 } }
+  .card{ position:relative; overflow:hidden; cursor:pointer; border-radius:var(--radius);
+    background:linear-gradient(180deg, rgba(20,30,55,.62), rgba(15,23,41,.55));
+    border:1px solid rgba(148,163,184,.12); box-shadow:var(--shadow);
+    padding:16px 14px 14px; transition: transform .45s cubic-bezier(.2,.8,.2,1), border-color .2s, box-shadow .2s;}
+  .card:hover{ transform:translateY(-4px); border-color:rgba(96,165,250,.4); box-shadow:0 12px 34px rgba(59,130,246,.18) }
+  .card:focus-visible{ outline:2px solid var(--accent) }
+  .top{ display:flex; align-items:center; justify-content:space-between; gap:12px }
+  .svc{ display:flex; align-items:center; gap:12px; font-weight:700; letter-spacing:.2px }
+  .svc .icon{ width:34px;height:34px;border-radius:12px; display:grid; place-items:center; font-weight:800;color:white;
+    background:linear-gradient(145deg, rgba(59,130,246,.85), rgba(59,130,246,.55));
+    text-shadow:0 2px 8px rgba(0,0,0,.35); box-shadow: inset 0 1px 6px rgba(255,255,255,.25), 0 8px 18px rgba(59,130,246,.35);}
+  .meta{ display:flex; align-items:center; gap:8px; color:var(--muted); font-size:12px;
+    background:rgba(59,130,246,.08); padding:.35rem .6rem; border-radius:999px; border:1px solid rgba(96,165,250,.25)}
+  .meta .dot{ width:10px;height:10px;border-radius:999px;background:var(--good); box-shadow:0 0 14px rgba(34,197,94,.6) }
+  .spark{ margin-top:12px; height:48px; border-radius:12px; padding:8px;
+    background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+    border:1px dashed rgba(96,165,250,.22) }
+  .spark svg{ width:100%; height:100% }
+  .foot{ display:flex; align-items:center; justify-content:space-between; margin-top:10px; font-size:12px; color:var(--muted) }
+  .uptime{ margin-top:22px; padding:18px; border-radius:var(--radius);
+    background:linear-gradient(180deg, rgba(20,30,55,.65), rgba(20,30,55,.45));
+    border:1px solid rgba(96,165,250,.2); box-shadow:var(--shadow) }
+  .uptime h3{ margin:0 0 12px 0; font-size:16px; letter-spacing:.3px }
+  .bars{ display:grid; grid-template-columns:repeat(90,1fr); gap:4px; align-items:end }
+  .bar{ height:44px; border-radius:6px; background:linear-gradient(180deg, rgba(148,163,184,.18), rgba(148,163,184,.06)) }
+  .bar > i{ display:block; width:100%; height:var(--fill,100%); border-radius:4px;
+    background:linear-gradient(180deg, var(--accent-2), var(--accent));
+    box-shadow:0 6px 18px rgba(59,130,246,.35); transform-origin:bottom; animation:grow .9s cubic-bezier(.2,.8,.2,1) backwards }
+  @keyframes grow{ from{transform:scaleY(0)} to{transform:scaleY(1)} }
+  footer{ margin-top:26px; display:flex; justify-content:space-between; gap:10px; color:var(--muted); font-size:12px }
+  .modal{ position:fixed; inset:0; display:none; place-items:center; z-index:50; }
+  .modal[open]{ display:grid }
+  .backdrop{ position:absolute; inset:0; background:rgba(4,6,17,.6); backdrop-filter:blur(4px); opacity:0; animation:fade .15s ease forwards; }
+  @keyframes fade{ to{opacity:1} }
+  .sheet{ position:relative; width:min(720px, 96vw); max-height:86vh; overflow:auto;
+    border-radius:22px; background:linear-gradient(180deg, rgba(20,30,55,.86), rgba(15,23,41,.86));
+    border:1px solid rgba(96,165,250,.25); box-shadow:0 30px 80px rgba(0,0,0,.5);
+    padding:18px 18px 16px; transform:translateY(10px); opacity:0; animation:pop .22s cubic-bezier(.2,.8,.2,1) forwards; }
+  @keyframes pop{ to{ transform:none; opacity:1 } }
+  .sheet .header{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:8px }
+  .tag{ font-size:12px; padding:.35rem .6rem; border-radius:999px; border:1px solid rgba(96,165,250,.35); color:#dce7ff;
+    background:linear-gradient(180deg, rgba(59,130,246,.25), rgba(59,130,246,.12)) }
+  .close{ appearance:none; border:none; background:transparent; color:var(--muted); font-size:18px; cursor:pointer; border-radius:10px; padding:.2rem .45rem }
+  .close:hover{ color:#fff }
+  .grid2{ display:grid; gap:14px; grid-template-columns:1fr }
+  @media(min-width:780px){ .grid2{ grid-template-columns: 1.3fr .9fr } }
+  .panel{ border-radius:16px; padding:14px; background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+    border:1px solid rgba(148,163,184,.18) }
+  .panel h4{ margin:.1rem 0 .5rem 0; font-size:14px; letter-spacing:.2px }
+  .kv{ display:grid; grid-template-columns:auto 1fr; gap:8px 12px; font-size:14px; color:var(--muted) }
+  .kv b{ color:#fff; font-weight:600 }
+  .chart{ height:140px; border-radius:12px; padding:8px; border:1px dashed rgba(96,165,250,.22) }
+  .chart svg{ width:100%; height:100% }
+  .incidents{ font-size:14px; color:var(--muted) }
+  .incidents li{ margin:.25rem 0 }
+  .pill{ display:inline-flex; align-items:center; gap:6px; padding:.25rem .5rem; border-radius:999px; background:rgba(59,130,246,.1); border:1px solid rgba(96,165,250,.22); font-size:12px }
+  .status-dot{ width:8px;height:8px;border-radius:999px;background:var(--good) }
+  @media (prefers-reduced-motion:reduce){ *{ animation:none!important; transition:none!important } }
+</style>
+</head>
+<body>
+  <div class="bg waves"></div>
+  <div class="wrap">
+    <header>
+      <div class="brand" aria-label="Site brand">
+        <div class="logo" aria-hidden="true">K</div>
+        <div>
+          <h1>Koha Service Status</h1>
+          <div class="subtle" id="lastUpdated">Updated: —</div>
+        </div>
+      </div>
+    </header>
+
+    <section class="status-banner" role="status" aria-live="polite">
+      <div class="row">
+        <span class="pulse" aria-hidden="true"></span>
+        <div class="banner-title" id="globalStatus">All systems operational</div>
+      </div>
+      <div class="banner-sub">Official status page for KohaClient.</div>
+    </section>
+
+    <section class="grid" aria-label="Services">
+      <article class="card col-4" tabindex="0" role="button" aria-label="KohaVoiceAPI details" data-service="KohaVoiceAPI">
+        <div class="top">
+          <div class="svc"><div class="icon">V</div><div>KohaVoiceAPI</div></div>
+          <div class="meta"><span class="dot"></span><span class="state">Online</span></div>
+        </div>
+        <div class="spark"><svg preserveAspectRatio="none" viewBox="0 0 300 80"></svg></div>
+        <div class="foot">
+          <span>last latency: <b class="lat">—</b> ms</span>
+          <span>today: <b class="today">100%</b></span>
+        </div>
+      </article>
+
+      <article class="card col-4" tabindex="0" role="button" aria-label="KohaFriendsAPI details" data-service="KohaFriendsAPI">
+        <div class="top">
+          <div class="svc"><div class="icon">F</div><div>KohaFriendsAPI</div></div>
+          <div class="meta"><span class="dot"></span><span class="state">Online</span></div>
+        </div>
+        <div class="spark"><svg preserveAspectRatio="none" viewBox="0 0 300 80"></svg></div>
+        <div class="foot">
+          <span>last latency: <b class="lat">—</b> ms</span>
+          <span>today: <b class="today">100%</b></span>
+        </div>
+      </article>
+
+      <article class="card col-4" tabindex="0" role="button" aria-label="KohaDataAPI details" data-service="KohaDataAPI">
+        <div class="top">
+          <div class="svc"><div class="icon">D</div><div>KohaDataAPI</div></div>
+          <div class="meta"><span class="dot"></span><span class="state">Online</span></div>
+        </div>
+        <div class="spark"><svg preserveAspectRatio="none" viewBox="0 0 300 80"></svg></div>
+        <div class="foot">
+          <span>last latency: <b class="lat">—</b> ms</span>
+          <span>today: <b class="today">100%</b></span>
+        </div>
+      </article>
+    </section>
+
+    <section class="uptime" aria-label="Uptime last 90 days">
+      <h3>Uptime • Last 90 Days</h3>
+      <div class="bars" id="uptimeBars"></div>
+    </section>
+
+    <footer>
+      <span>© <span id="year"></span> KohaClient</span>
+      <span>Contact: support@kohaclient.cc</span>
+    </footer>
+  </div>
+
+  <div class="modal" id="detailsModal" aria-modal="true" role="dialog" aria-labelledby="modalTitle" aria-describedby="modalDesc">
+    <div class="backdrop" data-close></div>
+    <div class="sheet">
+      <div class="header">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="icon" id="modalIcon" aria-hidden="true" style="width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(145deg, rgba(59,130,246,.85), rgba(59,130,246,.55));box-shadow: inset 0 1px 6px rgba(255,255,255,.25), 0 8px 18px rgba(59,130,246,.35);font-weight:800;color:white;">K</div>
+          <div>
+            <div id="modalTitle" style="font-weight:700">Service</div>
+            <div class="subtle" id="modalDesc">Live overview and recent metrics</div>
+          </div>
+        </div>
+        <div class="pill"><span class="status-dot" id="modalDot"></span><span id="modalState">Online</span></div>
+        <button class="close" type="button" aria-label="Close" data-close>✕</button>
+      </div>
+
+      <div class="grid2">
+        <div class="panel">
+          <h4>Latency (last 30 samples)</h4>
+          <div class="chart"><svg viewBox="0 0 480 140" preserveAspectRatio="none" id="modalLatency"></svg></div>
+        </div>
+        <div class="panel">
+          <h4>Current metrics</h4>
+          <div class="kv" id="modalMetrics">
+            <span>Latency (p95)</span><b>— ms</b>
+            <span>Requests / min</span><b>—</b>
+            <span>Error rate</span><b>—%</b>
+            <span>Region</span><b>—</b>
+            <span>Version</span><b>—</b>
+            <span>Uptime today</span><b>—%</b>
+          </div>
+        </div>
+        <div class="panel" style="grid-column:1 / -1">
+          <h4>Recent incidents</h4>
+          <ul class="incidents" id="modalIncidents">
+            <li>No incidents reported.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+const API_BASE = "http://173.212.196.36:5077";
+
+const $=(s,r=document)=>r.querySelector(s);
+const $$=(s,r=document)=>[...r.querySelectorAll(s)];
+
+const serviceCards={}; $$('.card').forEach(c=>serviceCards[c.getAttribute('data-service')]=c);
+
+function paintFromAPI(payload){
+  const { services, uptime, updatedAt } = payload;
+  const bars = $('#uptimeBars');
+  bars.innerHTML = '';
+  (uptime||[]).slice(-90).forEach(v=>{
+    const pct = Math.max(0, Math.min(100, Number(v)));
+    const el = document.createElement('div'); el.className='bar';
+    const fill = document.createElement('i'); fill.style.setProperty('--fill',(pct*0.45)+'%');
+    el.appendChild(fill); bars.appendChild(el);
+  });
+  void bars.offsetHeight;
+
+  let allOk = true;
+  services.forEach(s=>{
+    const card = serviceCards[s.id]; if(!card) return;
+    const dot = card.querySelector('.meta .dot');
+    const stateEl = card.querySelector('.meta .state');
+    if(s.state === 'outage'){ dot.style.background='var(--bad)'; dot.style.boxShadow='0 0 14px rgba(239,68,68,.7)'; stateEl.textContent='Outage'; allOk=false; }
+    else if(s.state === 'degraded'){ dot.style.background='var(--warn)'; dot.style.boxShadow='0 0 14px rgba(245,158,11,.7)'; stateEl.textContent='Degraded'; }
+    else { dot.style.background='var(--good)'; dot.style.boxShadow='0 0 14px rgba(34,197,94,.65)'; stateEl.textContent='Online'; }
+
+    const series = Array.isArray(s.latency)? s.latency : [];
+    card.querySelector('svg').innerHTML = sparkline(series);
+    card.querySelector('.lat').textContent = series.length ? Math.round(series.at(-1)) : '—';
+    card.querySelector('.today').textContent = (Number.isFinite(s.today)? s.today : 0) + '%';
+
+    card.dataset.series  = JSON.stringify(series);
+    card.dataset.state   = s.state || 'online';
+    card.dataset.region  = s.region || '—';
+    card.dataset.version = s.version || '—';
+    card.dataset.rpm     = (Number.isFinite(s.rpm) ? s.rpm : '—');
+    card.dataset.err     = (Number.isFinite(s.err) ? s.err : 0);
+  });
+
+  $('#globalStatus').textContent = allOk ? 'All systems operational' : 'Partial disruption';
+  $('#lastUpdated').textContent  = 'Updated: ' + new Date(updatedAt || Date.now()).toLocaleTimeString();
+}
+
+function sparkline(values,width=300,height=80,pad=6){
+  if(!values.length) return '';
+  const max=Math.max(...values), min=Math.min(...values);
+  const sx=(width-pad*2)/(values.length-1), sy=(height-pad*2)/((max-min)||1);
+  let d=''; values.forEach((v,i)=>{ const x=pad+i*sx, y=height-pad-(v-min)*sy; d+=(i?' L':'M')+x+' '+y; });
+  return `<defs><linearGradient id="g" x1="0" x2="0" y1="0" y2="1">
+    <stop offset="0%" stop-color="rgba(96,165,250,1)"/><stop offset="100%" stop-color="rgba(59,130,246,1)"/>
+  </linearGradient></defs><path d="${d}" fill="none" stroke="url(#g)" stroke-width="2" stroke-linecap="round"/>`;
+}
+
+function lineWithFill(values,width=480,height=140,pad=10){
+  if(!values.length) return '';
+  const max=Math.max(...values), min=Math.min(...values);
+  const sx=(width-pad*2)/(values.length-1), sy=(height-pad*2)/((max-min)||1);
+  let d='', pts=[]; values.forEach((v,i)=>{ const x=pad+i*sx, y=height-pad-(v-min)*sy; d+=(i?' L':'M')+x+' '+y; pts.push([x,y]); });
+  const baseY=height-pad; const fillPath=`${d} L ${pts.at(-1)[0]} ${baseY} L ${pts[0][0]} ${baseY} Z`;
+  return `<defs>
+    <linearGradient id="lg" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="rgba(96,165,250,.55)"/><stop offset="100%" stop-color="rgba(59,130,246,.05)"/>
+    </linearGradient>
+    <linearGradient id="stroke" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="rgba(96,165,250,1)"/><stop offset="100%" stop-color="rgba(59,130,246,1)"/>
+    </linearGradient>
+  </defs>
+  <path d="${fillPath}" fill="url(#lg)" stroke="none"/>
+  <path d="${d}" fill="none" stroke="url(#stroke)" stroke-width="2" stroke-linecap="round"/>`;
+}
+
+const modal = $('#detailsModal');
+let lastFocus=null;
+
+function openModal(card){
+  lastFocus=document.activeElement;
+  const id=card.getAttribute('data-service');
+  $('#modalTitle').textContent=id;
+  $('#modalIcon').textContent = id[5] || 'K';
+  const state=card.dataset.state||'online';
+  $('#modalState').textContent = state[0].toUpperCase()+state.slice(1);
+  $('#modalDot').style.background = state==='outage'?'var(--bad)':state==='degraded'?'var(--warn)':'var(--good)';
+  const vals=JSON.parse(card.dataset.series||'[]');
+  $('#modalLatency').innerHTML = lineWithFill(vals);
+  $('#modalMetrics').innerHTML = `
+    <span>Latency (p95)</span><b>${p95(vals) ?? '—'} ms</b>
+    <span>Requests / min</span><b>${card.dataset.rpm}</b>
+    <span>Error rate</span><b>${card.dataset.err}%</b>
+    <span>Region</span><b>${card.dataset.region}</b>
+    <span>Version</span><b>${card.dataset.version}</b>
+    <span>Uptime today</span><b>${card.querySelector('.today').textContent}</b>`;
+  $('#modalIncidents').innerHTML =
+    state==='outage' ? `<li>⚠️ ${id} had an outage recently.</li>` :
+    state==='degraded' ? `<li>ℹ️ ${id} shows degraded performance.</li>` :
+    `<li>No incidents reported.</li>`;
+  modal.setAttribute('open',''); trapFocus(modal);
+}
+function p95(arr){ if(!arr?.length) return null; const s=[...arr].sort((a,b)=>a-b); const i=Math.ceil(s.length*.95)-1; return Math.round(s[Math.max(0,Math.min(i,s.length-1))]); }
+function trapFocus(c){ const f=c.querySelectorAll('button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])'); const first=f[0], last=f[f.length-1]; function loop(e){ if(e.key!=='Tab')return; if(e.shiftKey&&document.activeElement===first){ last.focus(); e.preventDefault(); } else if(!e.shiftKey&&document.activeElement===last){ first.focus(); e.preventDefault(); } } c.addEventListener('keydown',loop); setTimeout(()=>first?.focus(),0); }
+function closeModal(){ modal.removeAttribute('open'); lastFocus?.focus(); }
+$$('.card').forEach(card=>{ card.addEventListener('click',()=>openModal(card)); card.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){e.preventDefault();openModal(card);} }); });
+modal.addEventListener('click', e=>{ if(e.target.hasAttribute('data-close')) closeModal(); });
+window.addEventListener('keydown', e=>{ if(e.key==='Escape' && modal.hasAttribute('open')) closeModal(); });
+
+async function fetchAndPaint(){
+  try{
+    const r = await fetch(`${API_BASE}/api/status`, { cache:'no-store' });
+    if(!r.ok) throw new Error('bad');
+    const data = await r.json();
+    paintFromAPI(data);
+  }catch{
+    $('#globalStatus').textContent = 'Status API unreachable';
+  }
+}
+function init(){ fetchAndPaint(); setInterval(fetchAndPaint, 15000); $('#year').textContent = new Date().getFullYear(); }
+init();
+</script>
+</body>
+</html>

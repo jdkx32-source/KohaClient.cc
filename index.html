@@ -120,6 +120,18 @@
 
     .reveal{opacity:0;transform:translateY(20px) scale(.98);filter:blur(6px)}
     .reveal.show{opacity:1;transform:none;filter:none;transition:opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1), filter .7s}
+    .status-pill{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 12px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.08);
+      background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
+      color:var(--text-300); text-decoration:none; font-weight:700; letter-spacing:.2px;
+    }
+    .status-pill:hover{ color:#fff; transform:translateY(-1px); transition:transform .15s ease }
+    .status-dot{ width:10px;height:10px;border-radius:50% }
+    .dot-ok{ background:#22c55e; box-shadow:0 0 12px rgba(34,197,94,.6) }
+    .dot-warn{ background:#f59e0b; box-shadow:0 0 12px rgba(245,158,11,.6) }
+    .dot-bad{ background:#ef4444; box-shadow:0 0 12px rgba(239,68,68,.6) }
   </style>
 </head>
 <body>
@@ -137,6 +149,10 @@
         <a href="#faq">FAQ</a>
         <a href="#discord">Discord</a>
       </nav>
+      <a class="status-pill" href="status.html" id="liveStatus">
+        <span class="status-dot dot-ok" id="liveStatusDot"></span>
+        <span id="liveStatusText">Status</span>
+      </a>
     </div>
   </header>
 

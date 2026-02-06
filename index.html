@@ -3,8 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>KohaClient – Next-Gen Minecraft Client</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Oxanium:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <title>KohaClient - Next-Gen Minecraft Client</title>
   <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
   <style>
     :root{
@@ -15,11 +14,14 @@
       --radius-xl:22px; --radius-lg:18px; --radius-md:14px;
       --shadow-1:0 10px 30px rgba(0,0,0,.35); --shadow-2:0 20px 50px rgba(0,0,0,.5);
       --container-pad: 20px;
+      /* GDPR Safe System Fonts */
+      --font-main: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      --font-display: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     }
     *{box-sizing:border-box;margin:0;padding:0}
     html{scroll-behavior:smooth}
     body{
-      font-family:'Montserrat',system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,'Helvetica Neue',sans-serif;
+      font-family: var(--font-main);
       background:
         radial-gradient(1200px 600px at 20% -10%, rgba(14,165,255,.12), transparent 60%),
         radial-gradient(900px 500px at 110% 10%, rgba(59,130,246,.10), transparent 55%),
@@ -46,15 +48,16 @@
     /* NAV */
     .nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(10px);background:linear-gradient(180deg,rgba(10,14,18,.85),rgba(10,14,18,.35));border-bottom:1px solid rgba(255,255,255,.06)}
     .nav .row{display:flex;align-items:center;justify-content:space-between;padding:14px var(--container-pad)}
-    .brand{font-family:'Oxanium',monospace;letter-spacing:.8px;font-weight:800;font-size:1.3rem;display:flex;align-items:center;gap:10px}
+    .brand{font-family: var(--font-display); letter-spacing:.8px;font-weight:800;font-size:1.3rem;display:flex;align-items:center;gap:10px}
     .brand .logo-dot{width:12px;height:12px;border-radius:50%;background:var(--accent);box-shadow:var(--glowA)}
     .brand span{color:#fff}.brand b{color:var(--accent);text-shadow:0 0 16px rgba(14,165,255,.6)}
 
     nav.primary{display:flex;align-items:center;gap:10px}
-    nav.primary a{color:var(--text-300);text-decoration:none;padding:10px 12px;font-weight:600;letter-spacing:.3px;border-radius:10px}
-    nav.primary a:hover{color:#fff;background:rgba(255,255,255,.06)}
+    nav.primary a{color:var(--text-300);text-decoration:none;padding:10px 12px;font-weight:600;letter-spacing:.3px;border-radius:10px;transition:all 0.3s ease}
+    nav.primary a:hover{color:#fff;background:rgba(255,255,255,0.1)}
 
-    .status-pill{display:inline-flex;align-items:center;gap:8px;padding:10px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.08);background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));color:var(--text-300); text-decoration:none; font-weight:700; letter-spacing:.2px}
+    .status-pill{display:inline-flex;align-items:center;gap:8px;padding:10px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.08);background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));color:var(--text-300); text-decoration:none; font-weight:700; letter-spacing:.2px;transition:all 0.3s ease}
+    .status-pill:hover{background:rgba(255,255,255,0.1);transform:translateY(-1px)}
     .status-dot{ width:10px;height:10px;border-radius:50% }
     .dot-ok{ background:#22c55e; box-shadow:0 0 12px rgba(34,197,94,.6) }
 
@@ -70,7 +73,7 @@
     .hero .wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:8px}
     .badge{display:inline-flex;align-items:center;gap:10px;padding:10px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.08);background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));box-shadow:var(--shadow-1)}
     .badge i{color:var(--accent)}
-    h1{font-family:'Oxanium',monospace;font-size:clamp(2rem,6.5vw,4rem);line-height:1.06;margin:18px 0 14px;text-transform:uppercase;letter-spacing:1.6px}
+    h1{font-family: var(--font-display); font-size:clamp(2rem,6.5vw,4rem);line-height:1.06;margin:18px 0 14px;text-transform:uppercase;letter-spacing:1.6px}
     .glitch{position:relative;display:inline-block;color:#fff;text-shadow:0 0 22px rgba(14,165,255,.45)}
     .glitch::before,.glitch::after{content:attr(data-text);position:absolute;inset:0}
     .glitch::before{color:rgba(14,165,255,1);transform:translate(2px,0);mix-blend-mode:screen;opacity:.6;animation:glitch1 3s infinite linear}
@@ -80,10 +83,10 @@
     p.lead{color:var(--text-300);font-size:clamp(1rem,2.8vw,1.15rem);max-width:680px;margin:0 auto}
 
     .cta{display:flex;flex-wrap:wrap;gap:14px;margin-top:24px;justify-content:center}
-    .btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:14px 22px;border-radius:16px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;border:1px solid rgba(255,255,255,.08);background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));color:#fff;text-decoration:none;transform:translateZ(0);min-height:44px}
+    .btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:14px 22px;border-radius:16px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;border:1px solid rgba(255,255,255,.08);background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));color:#fff;text-decoration:none;transform:translateZ(0);min-height:44px;transition:all 0.3s cubic-bezier(.22,.61,.36,1)}
     .btn::after{content:"";position:absolute;inset:-2px;border-radius:inherit;padding:2px;background:linear-gradient(120deg,rgba(14,165,255,.0),rgba(14,165,255,.6),rgba(14,165,255,.0));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:.85}
     .btn.primary{box-shadow:var(--glowA)}
-    .btn:hover{transform:translateY(-2px)}
+    .btn:hover{transform:translateY(-3px);background:rgba(255,255,255,0.08)}
     .btn .shine{position:absolute;inset:-1px;border-radius:inherit;background:radial-gradient(120px 120px at var(--mx,50%) var(--my,50%), rgba(255,255,255,.25), transparent 70%);opacity:.25;mix-blend-mode:screen;transition:opacity .25s}
     .btn:hover .shine{opacity:.55}
 
@@ -93,21 +96,21 @@
     .grid-aurora{position:absolute;inset:-30%;background:radial-gradient(800px 300px at 20% 10%, rgba(14,165,255,.25), transparent 60%),conic-gradient(from 0deg, rgba(14,165,255,.12), rgba(59,130,246,.06), rgba(14,165,255,.12));filter:blur(40px);opacity:.35}
     .wire{position:absolute;inset:-2px;background-image:linear-gradient(transparent 95%, rgba(255,255,255,.08) 96%),linear-gradient(90deg, transparent 95%, rgba(255,255,255,.08) 96%);background-size:100% 24px, 24px 100%;opacity:.08}
 
-    .section-title{text-align:center;margin-bottom:16px;font-family:'Oxanium';letter-spacing:1.4px;text-transform:uppercase}
+    .section-title{text-align:center;margin-bottom:16px;font-family: var(--font-display); letter-spacing:1.4px;text-transform:uppercase}
     .section-sub{color:var(--text-500);text-align:center;max-width:780px;margin:0 auto 40px}
 
     .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
     .card{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.08);border-radius:var(--radius-lg);padding:26px;overflow:hidden;box-shadow:var(--shadow-1);transform-style:preserve-3d;transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease}
     .card:hover{box-shadow:0 20px 60px rgba(14,165,255,.18);border-color:rgba(14,165,255,.55)}
     .icon{font-size:2rem;color:var(--accent);margin-bottom:12px;filter:drop-shadow(0 6px 22px rgba(14,165,255,.35))}
-    .card h3{font-family:'Oxanium';font-size:1.2rem;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px}
+    .card h3{font-family: var(--font-display); font-size:1.2rem;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px}
     .card p{color:var(--text-300);font-size:.98rem}
     .glow-ring{position:absolute;inset:-1px;border-radius:inherit;pointer-events:none;background:radial-gradient(500px 220px at var(--px,50%) var(--py,50%), rgba(14,165,255,.35), transparent 60%);opacity:.15;mix-blend-mode:screen}
 
     .parallax .overlay{position:absolute;inset:0;background:radial-gradient(800px 320px at 20% 20%, rgba(14,165,255,.24), transparent 60%);mix-blend-mode:screen;pointer-events:none}
 
     .price-card{display:grid;grid-template-columns:1.1fr 1fr;gap:30px;align-items:center;background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.08);border-radius:var(--radius-xl);padding:36px;box-shadow:var(--shadow-2);overflow:hidden}
-    .price h3{font-family:'Oxanium';font-size:2rem;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:10px}
+    .price h3{font-family: var(--font-display); font-size:2rem;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:10px}
     .value{font-size:3rem;font-weight:800;line-height:1}
     .value small{font-size:1rem;color:var(--text-500)}
     .benefits{list-style:none;margin:18px 0 0;display:grid;gap:10px}
@@ -125,10 +128,11 @@
     @keyframes spin{to{--deg:360deg}}
 
     footer{border-top:1px solid rgba(255,255,255,.08);padding:50px 0}
-    .footer-brand{font-family:'Oxanium';font-weight:800;font-size:2rem;letter-spacing:1px}
+    .footer-brand{font-family: var(--font-display); font-weight:800;font-size:2rem;letter-spacing:1px}
     .footer-brand b{color:var(--accent)}
     .social{margin-top:18px}
-    .social a{color:var(--text-500);font-size:1.6rem;margin:0 10px;text-decoration:none}
+    .social a{color:var(--text-500);font-size:1.6rem;margin:0 10px;text-decoration:none;transition:all 0.3s ease}
+    .social a:hover{color:#fff;transform:scale(1.1)}
     .social a:hover{color:#fff}
 
     .reveal{opacity:0;transform:translateY(20px) scale(.98);filter:blur(6px)}
@@ -225,7 +229,7 @@
       <div>
         <div class="badge reveal"><i class='bx bxs-bolt'></i> Next-Gen Performance • Dark Mode • Made with love ❤️</div>
         <h1 class="reveal"><span class="glitch" data-text="KohaClient">KohaClient</span><br/>Enhance Your Minecraft</h1>
-        <p class="lead reveal">Ultra-smooth FPS, exclusive cosmetics, social features and a custom launcher — all wrapped in a sleek dark theme.</p>
+        <p class="lead reveal">Ultra-smooth FPS, exclusive cosmetics, social features and a custom launcher - all wrapped in a sleek dark theme.</p>
         <div class="cta reveal">
           <a class="btn primary" href="#" aria-disabled="true"><i class='bx bxl-windows'></i> Coming soon…<span class="shine"></span></a>
           <a class="btn" href="#features"><i class='bx bxs-rocket'></i> Explore<span class="shine"></span></a>
@@ -242,19 +246,19 @@
         <article class="card reveal" data-speed="0.02">
           <i class='bx bxs-group icon'></i>
           <h3>Friends & Chat</h3>
-          <p>Stay connected — seamless in-game chat, invites, and social features built right in.</p>
+          <p>Stay connected - seamless in-game chat, invites, and social features built right in.</p>
           <div class="glow-ring"></div>
         </article>
         <article class="card reveal" data-speed="0.03">
           <i class='bx bxs-paint icon'></i>
           <h3>Custom Cosmetics</h3>
-          <p>Express yourself with hats, cloaks, skins, and animated effects — all yours to customize.</p>
+          <p>Express yourself with hats, cloaks, skins, and animated effects - all yours to customize.</p>
           <div class="glow-ring"></div>
         </article>
         <article class="card reveal" data-speed="0.01">
           <i class='bx bxs-t-shirt icon'></i>
           <h3>Free Emotes & Capes</h3>
-          <p>Start for free — no hidden costs, just pure style and creativity.</p>
+          <p>Start for free - no hidden costs, just pure style and creativity.</p>
           <div class="glow-ring"></div>
         </article>
         <article class="card reveal" data-speed="0.02">
@@ -266,13 +270,13 @@
         <article class="card reveal" data-speed="0.03">
           <i class='bx bx-desktop icon'></i>
           <h3>Advanced HUD</h3>
-          <p>Monitor FPS, coordinates, ping and more — fully customizable and positionable.</p>
+          <p>Monitor FPS, coordinates, ping and more - fully customizable and positionable.</p>
           <div class="glow-ring"></div>
         </article>
         <article class="card reveal" data-speed="0.01">
           <i class='bx bx-microphone icon'></i>
           <h3>Dynamic Voice Chat</h3>
-          <p>Experience fully integrated 3D spatial audio — works on every server, even your own, no extra plugins or mods required.</p>
+          <p>Experience fully integrated 3D spatial audio - works on every server, even your own, no extra plugins or mods required.</p>
           <div class="glow-ring"></div>
         </article>
       </div>
@@ -330,7 +334,7 @@
   <section id="faq" class="faq">
     <div class="container">
       <h2 class="section-title reveal">FAQ</h2>
-      <p class="section-sub reveal">The essentials — short and clear.</p>
+      <p class="section-sub reveal">The essentials - short and clear.</p>
       <details class="reveal" data-speed="0.01">
         <summary>What is KohaClient?</summary>
         <div class="content">A modified Minecraft client for better performance, new features and maximum style.</div>
@@ -345,7 +349,7 @@
       </details>
       <details class="reveal" data-speed="0.01">
         <summary>How do I use KohaClient?</summary>
-        <div class="content">Download the launcher, install, sign in with your MC account — done.</div>
+        <div class="content">Download the launcher, install, sign in with your MC account - done.</div>
       </details>
       <details class="reveal" data-speed="0.01">
         <summary>Mod compatibility?</summary>
@@ -357,13 +361,7 @@
       </details>
       <details class="reveal" data-speed="0.01">
         <summary>Which versions are supported?</summary>
-        <div class="content">
-          <p>We follow a <strong>rolling release model</strong>, meaning we primarily support the latest stable Minecraft version.</p>
-          <br>
-          <p>When a new Minecraft version is released, the previous version enters a <strong>2-month maintenance phase</strong>. During this period, it will receive critical bug fixes, performance improvements, and security patches, but <strong>no new features</strong>.</p>
-          <br>
-          <p>After these 2 months, the old version reaches its <strong>End of Life (EOL)</strong> and will be removed from the launcher to ensure the best experience and stability for all users.</p>
-        </div>
+        <div class="content">Currently Fabric 1.21.8 - 1.21.9. We are continuously expanding.</div>
       </details>
     </div>
   </section>
@@ -386,7 +384,7 @@
       <div class="social">
         <a style="transition: all 0.2s ease;" href="https://discord.kohaclient.cc/" aria-label="Discord"><i class='bx bxl-discord-alt'></i></a>
       </div>
-      <p style="margin-top:10px;color:var(--text-500)">© 2025 KohaClient • Not affiliated with Mojang Studios.</p>
+      <p style="margin-top:10px;color:var(--text-500)">© 2025 KohaClient • Not affiliated with Mojang Studios. • <a href="impressum.html" style="color:var(--text-500); text-decoration:none;">Legal Notice</a> • <a href="privacy.html" style="color:var(--text-500); text-decoration:none;">Privacy Policy</a></p>
     </div>
   </footer>
 
@@ -473,5 +471,3 @@
   </script>
 </body>
 </html>
-
-

@@ -3,9 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>KohaClient – Security Architecture</title>
+  <title>KohaClient - Security Architecture</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Oxanium:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
   <style>
     :root{
@@ -16,11 +15,14 @@
       --radius-xl:22px; --radius-lg:18px; --radius-md:14px;
       --shadow-1:0 10px 30px rgba(0,0,0,.35); --shadow-2:0 20px 50px rgba(0,0,0,.5);
       --container-pad: 20px;
+      /* GDPR Safe System Fonts */
+      --font-main: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      --font-display: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     }
     *{box-sizing:border-box;margin:0;padding:0}
     html{scroll-behavior:smooth}
     body{
-      font-family:'Montserrat',system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,'Helvetica Neue',sans-serif;
+      font-family: var(--font-main);
       background:
         radial-gradient(1200px 600px at 20% -10%, rgba(14,165,255,.12), transparent 60%),
         radial-gradient(900px 500px at 110% 10%, rgba(59,130,246,.10), transparent 55%),
@@ -38,7 +40,7 @@
       border: 1px solid rgba(14,165,255,.2);
       border-radius: 5px;
       padding: 2px 6px;
-      font-family: 'Oxanium', monospace;
+      font-family: monospace;
       font-size: 0.9em;
       color: var(--accent);
     }
@@ -62,27 +64,30 @@
 
     .nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(10px);background:linear-gradient(180deg,rgba(10,14,18,.85),rgba(10,14,18,.35));border-bottom:1px solid rgba(255,255,255,.06)}
     .nav .row{display:flex;align-items:center;justify-content:space-between;padding:14px var(--container-pad)}
-    .brand{font-family:'Oxanium',monospace;letter-spacing:.8px;font-weight:800;font-size:1.3rem;display:flex;align-items:center;gap:10px}
+    .brand{font-family: var(--font-display); letter-spacing:.8px;font-weight:800;font-size:1.3rem;display:flex;align-items:center;gap:10px}
     .brand .logo-dot{width:12px;height:12px;border-radius:50%;background:var(--accent);box-shadow:var(--glowA)}
     .brand span{color:#fff}.brand b{color:var(--accent);text-shadow:0 0 16px rgba(14,165,255,.6)}
 
     nav.primary{display:flex;align-items:center;gap:10px}
-    nav.primary a{color:var(--text-300);text-decoration:none;padding:10px 12px;font-weight:600;letter-spacing:.3px;border-radius:10px}
-    nav.primary a:hover{color:#fff;background:rgba(255,255,255,.06)}
+    nav.primary a{color:var(--text-300);text-decoration:none;padding:10px 12px;font-weight:600;letter-spacing:.3px;border-radius:10px;transition:all 0.3s ease}
+    nav.primary a:hover{color:#fff;background:rgba(255,255,255,0.1)}
 
-    .status-pill{display:inline-flex;align-items:center;gap:8px;padding:10px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.08);background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));color:var(--text-300); text-decoration:none; font-weight:700; letter-spacing:.2px}
+    .status-pill{display:inline-flex;align-items:center;gap:8px;padding:10px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.08);background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));color:var(--text-300); text-decoration:none; font-weight:700; letter-spacing:.2px;transition:all 0.3s ease}
+    .status-pill:hover{background:rgba(255,255,255,0.1);transform:translateY(-1px)}
     .status-dot{ width:10px;height:10px;border-radius:50% }
     .dot-ok{ background:#22c55e; box-shadow:0 0 12px rgba(34,197,94,.6) }
 
-    .menu-toggle{display:none;align-items:center;justify-content:center;width:44px;height:44px;border-radius:10px;border:1px solid rgba(255,255,255,.08);background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));color:#fff}
+    .menu-toggle{display:none;align-items:center;justify-content:center;width:44px;height:44px;border-radius:10px;border:1px solid rgba(255,255,255,.08);background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));color:#fff;transition:all 0.3s ease}
+    .menu-toggle:hover{background:rgba(255,255,255,0.1)}
     .mobile-panel{position:fixed;inset:0 0 auto auto;top:60px;right:var(--container-pad);background:linear-gradient(180deg,rgba(10,14,18,.98),rgba(10,14,18,.92));border:1px solid rgba(255,255,255,.08);border-radius:16px;box-shadow:var(--shadow-2);width:min(92vw,360px);transform:translateY(-12px) scale(.98);opacity:0;pointer-events:none;transition:transform .2s,opacity .2s}
     .mobile-panel.open{transform:none;opacity:1;pointer-events:auto}
-    .mobile-panel a{display:block;padding:14px 16px;color:#fff;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.06)}
+    .mobile-panel a{display:block;padding:14px 16px;color:#fff;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.06);transition:all 0.2s ease}
+    .mobile-panel a:hover{background:rgba(255,255,255,0.05);padding-left:20px}
     .mobile-panel a:last-child{border-bottom:none}
 
     .hero{padding-top:140px;padding-bottom:120px}
     .hero .wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:8px}
-    h1{font-family:'Oxanium',monospace;font-size:clamp(2rem,6.5vw,4rem);line-height:1.06;margin:18px 0 14px;text-transform:uppercase;letter-spacing:1.6px}
+    h1{font-family: var(--font-display); font-size:clamp(2rem,6.5vw,4rem);line-height:1.06;margin:18px 0 14px;text-transform:uppercase;letter-spacing:1.6px}
     .glitch{position:relative;display:inline-block;color:#fff;text-shadow:0 0 22px rgba(14,165,255,.45)}
     .glitch::before,.glitch::after{content:attr(data-text);position:absolute;inset:0}
     .glitch::before{color:rgba(14,165,255,1);transform:translate(2px,0);mix-blend-mode:screen;opacity:.6;animation:glitch1 3s infinite linear}
@@ -92,14 +97,14 @@
     p.lead{color:var(--text-300);font-size:clamp(1rem,2.8vw,1.15rem);max-width:680px;margin:0 auto}
 
     .cta{display:flex;flex-wrap:wrap;gap:14px;margin-top:24px;justify-content:center}
-    .btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:14px 22px;border-radius:16px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;border:1px solid rgba(255,255,255,.08);background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));color:#fff;text-decoration:none;transform:translateZ(0);min-height:44px}
+    .btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:14px 22px;border-radius:16px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;border:1px solid rgba(255,255,255,.08);background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));color:#fff;text-decoration:none;transform:translateZ(0);min-height:44px;transition:all 0.3s cubic-bezier(.22,.61,.36,1)}
     .btn::after{content:"";position:absolute;inset:-2px;border-radius:inherit;padding:2px;background:linear-gradient(120deg,rgba(14,165,255,.0),rgba(14,165,255,.6),rgba(14,165,255,.0));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:.85}
     .btn.primary{box-shadow:var(--glowA)}
-    .btn:hover{transform:translateY(-2px)}
+    .btn:hover{transform:translateY(-3px);background:rgba(255,255,255,0.08)}
     .btn .shine{position:absolute;inset:-1px;border-radius:inherit;background:radial-gradient(120px 120px at var(--mx,50%) var(--my,50%), rgba(255,255,255,.25), transparent 70%);opacity:.25;mix-blend-mode:screen;transition:opacity .25s}
     .btn:hover .shine{opacity:.55}
 
-    .section-title{text-align:center;margin-bottom:16px;font-family:'Oxanium';letter-spacing:1.4px;text-transform:uppercase}
+    .section-title{text-align:center;margin-bottom:16px;font-family: var(--font-display); letter-spacing:1.4px;text-transform:uppercase}
     .section-sub{color:var(--text-500);text-align:center;max-width:780px;margin:0 auto 40px}
 
     .faq details{background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.08);border-radius:14px;margin:12px 0;overflow:hidden}
@@ -116,11 +121,11 @@
     }
 
     footer{border-top:1px solid rgba(255,255,255,.08);padding:50px 0}
-    .footer-brand{font-family:'Oxanium';font-weight:800;font-size:2rem;letter-spacing:1px}
+    .footer-brand{font-family: var(--font-display); font-weight:800;font-size:2rem;letter-spacing:1px}
     .footer-brand b{color:var(--accent)}
     .social{margin-top:18px}
-    .social a{color:var(--text-500);font-size:1.6rem;margin:0 10px;text-decoration:none}
-    .social a:hover{color:#fff}
+    .social a{color:var(--text-500);font-size:1.6rem;margin:0 10px;text-decoration:none;transition:all 0.3s ease}
+    .social a:hover{color:#fff;transform:scale(1.1)}
 
     .reveal{opacity:0;transform:translateY(20px) scale(.98);filter:blur(6px)}
     .reveal.show{opacity:1;transform:none;filter:none;transition:opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1), filter .7s}
@@ -265,9 +270,13 @@
     <div class="container" style="text-align:center">
       <div class="footer-brand">Koha<b>Client</b></div>
       <div class="social">
-        <a style="transition: all 0.2s ease;" href="https://discord.kohaclient.cc/" aria-label="Discord"><i class='bx bxl-discord-alt'></i></a>
+        <a href="https://discord.kohaclient.cc/" aria-label="Discord"><i class='bx bxl-discord-alt'></i></a>
       </div>
-      <p style="margin-top:10px;color:var(--text-500)">© 2025 KohaClient • Not affiliated with Mojang Studios.</p>
+      <p style="margin-top:10px;color:var(--text-500)">
+        © 2025 KohaClient • Not affiliated with Mojang Studios. • 
+        <a href="impressum.html" style="color:var(--text-500); text-decoration:none;">Legal Notice</a> • 
+        <a href="privacy.html" style="color:var(--text-500); text-decoration:none;">Privacy Policy</a>
+      </p>
     </div>
   </footer>
 

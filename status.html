@@ -89,34 +89,11 @@
     background:linear-gradient(180deg, var(--accent-2), var(--accent));
     box-shadow:0 6px 18px rgba(59,130,246,.35); transform-origin:bottom; animation:grow .9s cubic-bezier(.2,.8,.2,1) backwards }
   @keyframes grow{ from{transform:scaleY(0)} to{transform:scaleY(1)} }
-  footer{ margin-top:26px; display:flex; justify-content:space-between; gap:10px; color:var(--muted); font-size:12px }
-  .modal{ position:fixed; inset:0; display:none; place-items:center; z-index:50; }
-  .modal[open]{ display:grid }
-  .backdrop{ position:absolute; inset:0; background:rgba(4,6,17,.6); backdrop-filter:blur(4px); opacity:0; animation:fade .15s ease forwards; }
-  @keyframes fade{ to{opacity:1} }
-  .sheet{ position:relative; width:min(720px, 96vw); max-height:86vh; overflow:auto;
-    border-radius:22px; background:linear-gradient(180deg, rgba(20,30,55,.86), rgba(15,23,41,.86));
-    border:1px solid rgba(96,165,250,.25); box-shadow:0 30px 80px rgba(0,0,0,.5);
-    padding:18px 18px 16px; transform:translateY(10px); opacity:0; animation:pop .22s cubic-bezier(.2,.8,.2,1) forwards; }
-  @keyframes pop{ to{ transform:none; opacity:1 } }
-  .sheet .header{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:8px }
-  .tag{ font-size:12px; padding:.35rem .6rem; border-radius:999px; border:1px solid rgba(96,165,250,.35); color:#dce7ff;
-    background:linear-gradient(180deg, rgba(59,130,246,.25), rgba(59,130,246,.12)) }
-  .close{ appearance:none; border:none; background:transparent; color:var(--muted); font-size:18px; cursor:pointer; border-radius:10px; padding:.2rem .45rem }
-  .close:hover{ color:#fff }
-  .grid2{ display:grid; gap:14px; grid-template-columns:1fr }
-  @media(min-width:780px){ .grid2{ grid-template-columns: 1.3fr .9fr } }
-  .panel{ border-radius:16px; padding:14px; background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
-    border:1px solid rgba(148,163,184,.18) }
-  .panel h4{ margin:.1rem 0 .5rem 0; font-size:14px; letter-spacing:.2px }
-  .kv{ display:grid; grid-template-columns:auto 1fr; gap:8px 12px; font-size:14px; color:var(--muted) }
-  .kv b{ color:#fff; font-weight:600 }
-  .chart{ height:140px; border-radius:12px; padding:8px; border:1px dashed rgba(96,165,250,.22) }
-  .chart svg{ width:100%; height:100% }
-  .incidents{ font-size:14px; color:var(--muted) }
-  .incidents li{ margin:.25rem 0 }
-  .pill{ display:inline-flex; align-items:center; gap:6px; padding:.25rem .5rem; border-radius:999px; background:rgba(59,130,246,.1); border:1px solid rgba(96,165,250,.22); font-size:12px }
-  .status-dot{ width:8px;height:8px;border-radius:999px;background:var(--good) }
+  footer{ margin-top:26px; display:flex; flex-direction: column; align-items: center; justify-content:center; gap:10px; color:var(--muted); font-size:12px; border-top:1px solid rgba(255,255,255,.08); padding: 30px 0; }
+  footer a { color: var(--muted); text-decoration: none; transition: all 0.3s ease; }
+  footer a:hover { color: #fff; }
+  .footer-brand{ font-family: ui-sans-serif, system-ui; font-weight:800; font-size:1.5rem; letter-spacing:1px; margin-bottom: 5px; color: #fff; }
+  .footer-brand b{ color:var(--accent) }
   @media (prefers-reduced-motion:reduce){ *{ animation:none!important; transition:none!important } }
 </style>
 </head>
@@ -128,9 +105,12 @@
         <div class="logo" aria-hidden="true">K</div>
         <div>
           <h1>Koha Service Status</h1>
-          <div class="subtle" id="lastUpdated">Updated: —</div>
+          <div class="subtle" id="lastUpdated">Updated: -</div>
         </div>
       </div>
+      <nav style="display:flex; gap: 15px;">
+        <a href="index.html" style="color: var(--txt); text-decoration: none; font-weight: 600; font-size: 14px; transition: opacity 0.3s ease;">Home</a>
+      </nav>
     </header>
 
     <section class="status-banner" role="status" aria-live="polite">
@@ -149,7 +129,7 @@
         </div>
         <div class="spark"><svg preserveAspectRatio="none" viewBox="0 0 300 80"></svg></div>
         <div class="foot">
-          <span>last latency: <b class="lat">—</b> ms</span>
+          <span>last latency: <b class="lat">-</b> ms</span>
           <span>today: <b class="today">100%</b></span>
         </div>
       </article>
@@ -161,7 +141,7 @@
         </div>
         <div class="spark"><svg preserveAspectRatio="none" viewBox="0 0 300 80"></svg></div>
         <div class="foot">
-          <span>last latency: <b class="lat">—</b> ms</span>
+          <span>last latency: <b class="lat">-</b> ms</span>
           <span>today: <b class="today">100%</b></span>
         </div>
       </article>
@@ -173,7 +153,7 @@
         </div>
         <div class="spark"><svg preserveAspectRatio="none" viewBox="0 0 300 80"></svg></div>
         <div class="foot">
-          <span>last latency: <b class="lat">—</b> ms</span>
+          <span>last latency: <b class="lat">-</b> ms</span>
           <span>today: <b class="today">100%</b></span>
         </div>
       </article>
@@ -185,7 +165,8 @@
     </section>
 
     <footer>
-      <span>© <span id="year"></span> KohaClient</span>
+      <div class="footer-brand">Koha<b>Client</b></div>
+      <span>© <span id="year"></span> KohaClient • <a href="impressum.html">Legal Notice</a> • <a href="privacy.html">Privacy Policy</a></span>
       <span>Contact: support@kohaclient.cc</span>
     </footer>
   </div>
@@ -213,12 +194,12 @@
         <div class="panel">
           <h4>Current metrics</h4>
           <div class="kv" id="modalMetrics">
-            <span>Latency (p95)</span><b>— ms</b>
-            <span>Requests / min</span><b>—</b>
-            <span>Error rate</span><b>—%</b>
-            <span>Region</span><b>—</b>
-            <span>Version</span><b>—</b>
-            <span>Uptime today</span><b>—%</b>
+            <span>Latency (p95)</span><b>- ms</b>
+            <span>Requests / min</span><b>-</b>
+            <span>Error rate</span><b>-%</b>
+            <span>Region</span><b>-</b>
+            <span>Version</span><b>-</b>
+            <span>Uptime today</span><b>-%</b>
           </div>
         </div>
         <div class="panel" style="grid-column:1 / -1">
@@ -262,14 +243,14 @@ function paintFromAPI(payload){
 
     const series = Array.isArray(s.latency)? s.latency : [];
     card.querySelector('svg').innerHTML = sparkline(series);
-    card.querySelector('.lat').textContent = series.length ? Math.round(series.at(-1)) : '—';
+    card.querySelector('.lat').textContent = series.length ? Math.round(series.at(-1)) : '-';
     card.querySelector('.today').textContent = (Number.isFinite(s.today)? s.today : 0) + '%';
 
     card.dataset.series  = JSON.stringify(series);
     card.dataset.state   = s.state || 'online';
-    card.dataset.region  = s.region || '—';
-    card.dataset.version = s.version || '—';
-    card.dataset.rpm     = (Number.isFinite(s.rpm) ? s.rpm : '—');
+    card.dataset.region  = s.region || '-';
+    card.dataset.version = s.version || '-';
+    card.dataset.rpm     = (Number.isFinite(s.rpm) ? s.rpm : '-');
     card.dataset.err     = (Number.isFinite(s.err) ? s.err : 0);
   });
 
@@ -319,7 +300,7 @@ function openModal(card){
   const vals=JSON.parse(card.dataset.series||'[]');
   $('#modalLatency').innerHTML = lineWithFill(vals);
   $('#modalMetrics').innerHTML = `
-    <span>Latency (p95)</span><b>${p95(vals) ?? '—'} ms</b>
+    <span>Latency (p95)</span><b>${p95(vals) ?? '-'} ms</b>
     <span>Requests / min</span><b>${card.dataset.rpm}</b>
     <span>Error rate</span><b>${card.dataset.err}%</b>
     <span>Region</span><b>${card.dataset.region}</b>
